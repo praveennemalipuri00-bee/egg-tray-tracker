@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Analysis System</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      background:linear-gradient(135deg,#1e3c72,#2a5298);
+      min-height:100vh;
+      padding:20px;
+    }
+
+    .container{
+      max-width:1400px;
+      margin:auto;
+      background:white;
+      border-radius:15px;
+      padding:30px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:30px;
+      color:#333;
+    }
+
+    h2{
+      margin-top:40px;
+      margin-bottom:15px;
+      color:#2a5298;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 8px;
+    }
+
+    .input-group{
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+      margin-bottom:20px;
+    }
+
+    .shop-input-block {
+      flex: 1;
+      min-width: 280px;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .shop-input-block h4 {
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    input{
+      width: 100%;
+      padding:12px;
+      border:2px solid #ddd;
+      border-radius:8px;
+      font-size:16px;
+      margin-bottom: 10px;
+    }
+
+    input:last-child {
+      margin-bottom: 0;
+    }
+
+    #EntryDate {
+      max-width: 300px;
+    }
+
+    button{
+      padding:12px 25px;
+      border:none;
+      border-radius:8px;
+      background:#2a5298;
+      color:white;
+      cursor:pointer;
+      font-size:16px;
+      transition:0.3s;
+      display: block;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    button:hover{
+      background:#1e3c72;
+    }
+
+    /* Style for the Navigation Button */
+    .nav-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .nav-btn:hover {
+      background: #218838;
+    }
+
+    .delete-btn{
+      background:red;
+      padding:6px 12px;
+      font-size: 14px;
+    }
+
+    .delete-btn:hover{
+      background:darkred;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border-radius: 8px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      white-space:nowrap;
+    }
+
+    table th,
+    table td{
+      border:1px solid #ddd;
+      padding:12px;
+      text-align:center;
+    }
+
+    table th{
+      background:#2a5298;
+      color:white;
+    }
+
+    table tr:nth-child(even){
+      background:#f9f9f9;
+    }
+
+    table tr:hover{
+      background:#f1f1f1;
+    }
+
+    .profit-cell {
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .total-cell {
+      font-weight: bold;
+      background: #eef2f7;
+    }
+
+    @media(max-width:700px){
+      .input-group{
+        flex-direction:column;
+      }
+      .nav-btn {
+        display: block;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Navigation Link to Page 1 -->
+    <a href="index.html" class="nav-btn">← Back to Poultry Ledger Tracker</a>
+
+    <h1>Shop Analysis System</h1>
+
+    <h2>Daily Stock Entry</h2>
+    <div class="input-group">
+      <input type="date" id="EntryDate">
+    </div>
+
+    <div class="input-group">
+      <!-- SHOP 1 INPUTS -->
+      <div class="shop-input-block">
+        <h4>CHP Shop 1</h4>
+        <input type="number" id="Shop1Added" placeholder="Added Stock">
+        <input type="number" id="Shop1Remaining" placeholder="Remaining Stock">
+      </div>
+
+      <!-- SHOP 2 INPUTS -->
+      <div class="shop-input-block">
+        <h4>NDG APT Shop</h4>
+        <input type="number" id="Shop2Added" placeholder="Added Stock">
+        <input type="number" id="Shop2Remaining" placeholder="Remaining Stock">
+      </div>
+
+      <!-- SHOP 3 INPUTS -->
+      <div class="shop-input-block">
+        <h4>NDG Market Shop</h4>
+        <input type="number" id="Shop3Added" placeholder="Added Stock">
+        <input type="number" id="Shop3Remaining" placeholder="Remaining Stock">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <button onclick="SaveEntry()">Save Entry Data</button>
+    </div>
+
+    <!-- DAILY DATA TRACKERS -->
+    <h2>CHP Shop 1 Tracker (Profit: $15 / tray)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Opening</th>
+            <th>Added</th>
+            <th>Remaining</th>
+            <th>Sales (Trays)</th>
+            <th>Profit ($)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="Shop1Table"></tbody>
+      </table>
+    </div>
+
+    <h2>NDG APT Shop Tracker (Profit: $6 / tray)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Opening</th>
+            <th>Added</th>
+            <th>Remaining</th>
+            <th>Sales (Trays)</th>
+            <th>Profit ($)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="Shop2Table"></tbody>
+      </table>
+    </div>
+
+    <h2>NDG Market Shop Tracker (Profit: $6 / tray)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Opening</th>
+            <th>Added</th>
+            <th>Remaining</th>
+            <th>Sales (Trays)</th>
+            <th>Profit ($)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="Shop3Table"></tbody>
+      </table>
+    </div>
+
+    <!-- WEEKLY DATA ACCUMULATION SUMMARIES -->
+    <h2>Weekly Sales Tracker (Monday → Sunday)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Week Range</th>
+            <th>CHP Shop 1 Sales (Trays)</th>
+            <th>NDG APT Sales (Trays)</th>
+            <th>NDG Market Sales (Trays)</th>
+            <th>Total Combined Sales</th>
+          </tr>
+        </thead>
+        <tbody id="WeeklySalesTable"></tbody>
+      </table>
+    </div>
+
+    <h2>Weekly Profit Tracker (Monday → Sunday)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Week Range</th>
+            <th>CHP Shop 1 Profit ($)</th>
+            <th>NDG APT Profit ($)</th>
+            <th>NDG Market Profit ($)</th>
+            <th>Total Combined Profit ($)</th>
+          </tr>
+        </thead>
+        <tbody id="WeeklyProfitTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    // New local storage namespace key to isolate clean, non-timezone shifted tracking data
+    let ShopData = JSON.parse(localStorage.getItem("TripleShopSystemV4")) || [];
+
+    const PROFIT_RATES = {
+      shop1: 15,
+      shop2: 6,
+      shop3: 6
+    };
+
+    const STARTING_STOCKS = {
+      shop1: 50,
+      shop2: 0,
+      shop3: 91
+    };
+
+    // Formats calendar window cleanly from Monday to Sunday without standard native timezone leaks
+    function GetWeekRange(DateValue){
+      let parts = DateValue.split('-');
+      let DateObj = new Date(parts[0], parts[1] - 1, parts[2]); 
+      let Day = DateObj.getDay(); 
+      
+      // Calculate offset back to preceding Monday (Monday = 1, Sunday = 0)
+      let Difference = (Day === 0) ? -6 : 1 - Day;
+
+      let Monday = new Date(DateObj);
+      Monday.setDate(DateObj.getDate() + Difference);
+
+      let Sunday = new Date(Monday);
+      Sunday.setDate(Monday.getDate() + 6); // Monday + 6 days = Sunday
+
+      let formatLocalDate = (d) => {
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+      };
+
+      return formatLocalDate(Monday) + " To " + formatLocalDate(Sunday);
+    }
+
+    function SaveEntry(){
+      let DateValue = document.getElementById("EntryDate").value;
+
+      if(DateValue === ""){
+        alert("Please Select Date");
+        return;
+      }
+
+      let ExistingEntry = ShopData.find(Item => Item.Date === DateValue);
+      if(ExistingEntry){
+        alert("Entry already exists for this date");
+        return;
+      }
+
+      let SortedData = [...ShopData].sort((A,B)=> A.TimeStamp - B.TimeStamp);
+      let LastEntry = SortedData[SortedData.length - 1];
+
+      let Shop1Opening = LastEntry ? LastEntry.Shop1Remaining : STARTING_STOCKS.shop1;
+      let Shop2Opening = LastEntry ? LastEntry.Shop2Remaining : STARTING_STOCKS.shop2;
+      let Shop3Opening = LastEntry ? LastEntry.Shop3Remaining : STARTING_STOCKS.shop3;
+
+      let Shop1Added = Number(document.getElementById("Shop1Added").value) || 0;
+      let Shop2Added = Number(document.getElementById("Shop2Added").value) || 0;
+      let Shop3Added = Number(document.getElementById("Shop3Added").value) || 0;
+
+      let Shop1Remaining = document.getElementById("Shop1Remaining").value === "" ? NaN : Number(document.getElementById("Shop1Remaining").value);
+      let Shop2Remaining = document.getElementById("Shop2Remaining").value === "" ? NaN : Number(document.getElementById("Shop2Remaining").value);
+      let Shop3Remaining = document.getElementById("Shop3Remaining").value === "" ? NaN : Number(document.getElementById("Shop3Remaining").value);
+
+      if(isNaN(Shop1Remaining) || isNaN(Shop2Remaining) || isNaN(Shop3Remaining)){
+        alert("Please Enter Remaining Stock values for all three shops.");
+        return;
+      }
+
+      if(Shop1Remaining > (Shop1Opening + Shop1Added)){
+        alert("CHP Shop 1 Remaining Stock cannot exceed available stock.");
+        return;
+      }
+      if(Shop2Remaining > (Shop2Opening + Shop2Added)){
+        alert("NDG APT Shop Remaining Stock cannot exceed available stock.");
+        return;
+      }
+      if(Shop3Remaining > (Shop3Opening + Shop3Added)){
+        alert("NDG Market Shop Remaining Stock cannot exceed available stock.");
+        return;
+      }
+
+      let Shop1Sales = Shop1Opening + Shop1Added - Shop1Remaining;
+      let Shop2Sales = Shop2Opening + Shop2Added - Shop2Remaining;
+      let Shop3Sales = Shop3Opening + Shop3Added - Shop3Remaining;
+
+      let Shop1Profit = Shop1Sales * PROFIT_RATES.shop1;
+      let Shop2Profit = Shop2Sales * PROFIT_RATES.shop2;
+      let Shop3Profit = Shop3Sales * PROFIT_RATES.shop3;
+
+      let parts = DateValue.split('-');
+      let localTimestamp = new Date(parts[0], parts[1] - 1, parts[2]).getTime();
+
+      let Entry = {
+        Date: DateValue,
+        Week: GetWeekRange(DateValue),
+        TimeStamp: localTimestamp,
+        
+        Shop1Opening, Shop1Added, Shop1Remaining, Shop1Sales, Shop1Profit,
+        Shop2Opening, Shop2Added, Shop2Remaining, Shop2Sales, Shop2Profit,
+        Shop3Opening, Shop3Added, Shop3Remaining, Shop3Sales, Shop3Profit
+      };
+
+      ShopData.push(Entry);
+      localStorage.setItem("TripleShopSystemV4", JSON.stringify(ShopData));
+
+      DisplayAllTables();
+      ClearInputs();
+    }
+
+    function DisplayAllTables(){
+      let Shop1Tbody = document.getElementById("Shop1Table");
+      let Shop2Tbody = document.getElementById("Shop2Table");
+      let Shop3Tbody = document.getElementById("Shop3Table");
+      let WeeklySalesTbody = document.getElementById("WeeklySalesTable");
+      let WeeklyProfitTbody = document.getElementById("WeeklyProfitTable");
+
+      Shop1Tbody.innerHTML = "";
+      Shop2Tbody.innerHTML = "";
+      Shop3Tbody.innerHTML = "";
+      WeeklySalesTbody.innerHTML = "";
+      WeeklyProfitTbody.innerHTML = "";
+
+      // Sort data descending (Newest daily dates always first)
+      let SortedData = [...ShopData].sort((A,B)=> B.TimeStamp - A.TimeStamp);
+
+      // --- INDIVIDUAL SHOP TABLES DISPLAY RENDERING ---
+      SortedData.forEach((Item)=>{
+        let OriginalIndex = ShopData.indexOf(Item);
+
+        Shop1Tbody.innerHTML += `
+          <tr>
+            <td>${Item.Date}</td>
+            <td>${Item.Shop1Opening}</td>
+            <td>${Item.Shop1Added}</td>
+            <td>${Item.Shop1Remaining}</td>
+            <td>${Item.Shop1Sales}</td>
+            <td class="profit-cell">$${Item.Shop1Profit}</td>
+            <td><button class="delete-btn" onclick="DeleteEntry(${OriginalIndex})">Delete</button></td>
+          </tr>
+        `;
+
+        Shop2Tbody.innerHTML += `
+          <tr>
+            <td>${Item.Date}</td>
+            <td>${Item.Shop2Opening}</td>
+            <td>${Item.Shop2Added}</td>
+            <td>${Item.Shop2Remaining}</td>
+            <td>${Item.Shop2Sales}</td>
+            <td class="profit-cell">$${Item.Shop2Profit}</td>
+            <td><button class="delete-btn" onclick="DeleteEntry(${OriginalIndex})">Delete</button></td>
+          </tr>
+        `;
+
+        Shop3Tbody.innerHTML += `
+          <tr>
+            <td>${Item.Date}</td>
+            <td>${Item.Shop3Opening}</td>
+            <td>${Item.Shop3Added}</td>
+            <td>${Item.Shop3Remaining}</td>
+            <td>${Item.Shop3Sales}</td>
+            <td class="profit-cell">$${Item.Shop3Profit}</td>
+            <td><button class="delete-btn" onclick="DeleteEntry(${OriginalIndex})">Delete</button></td>
+          </tr>
+        `;
+      });
+
+      // --- WEEKLY ACCUMULATION CALCULATION MAPS ---
+      let WeeklyDataMap = {};
+      let WeekTimeStamps = {};
+
+      ShopData.forEach((Item)=>{
+        if(WeeklyDataMap[Item.Week]){
+          WeeklyDataMap[Item.Week].Shop1Sales += Item.Shop1Sales;
+          WeeklyDataMap[Item.Week].Shop2Sales += Item.Shop2Sales;
+          WeeklyDataMap[Item.Week].Shop3Sales += Item.Shop3Sales;
+          
+          WeeklyDataMap[Item.Week].Shop1Profit += Item.Shop1Profit;
+          WeeklyDataMap[Item.Week].Shop2Profit += Item.Shop2Profit;
+          WeeklyDataMap[Item.Week].Shop3Profit += Item.Shop3Profit;
+
+          if (Item.TimeStamp > WeekTimeStamps[Item.Week]) {
+             WeekTimeStamps[Item.Week] = Item.TimeStamp;
+          }
+        } else {
+          WeeklyDataMap[Item.Week] = {
+            Shop1Sales: Item.Shop1Sales,
+            Shop2Sales: Item.Shop2Sales,
+            Shop3Sales: Item.Shop3Sales,
+            Shop1Profit: Item.Shop1Profit,
+            Shop2Profit: Item.Shop2Profit,
+            Shop3Profit: Item.Shop3Profit
+          };
+          WeekTimeStamps[Item.Week] = Item.TimeStamp;
+        }
+      });
+
+      // Sort weekly indices dynamically based on timestamps (Latest week entries first)
+      let SortedWeeks = Object.keys(WeeklyDataMap).sort((w1, w2) => WeekTimeStamps[w2] - WeekTimeStamps[w1]);
+
+      SortedWeeks.forEach((WeekRange)=>{
+        let CombinedSales = WeeklyDataMap[WeekRange].Shop1Sales + WeeklyDataMap[WeekRange].Shop2Sales + WeeklyDataMap[WeekRange].Shop3Sales;
+        let CombinedProfit = WeeklyDataMap[WeekRange].Shop1Profit + WeeklyDataMap[WeekRange].Shop2Profit + WeeklyDataMap[WeekRange].Shop3Profit;
+        
+        // Render Row inside Weekly Sales Table
+        WeeklySalesTbody.innerHTML += `
+          <tr>
+            <td><strong>${WeekRange}</strong></td>
+            <td>${WeeklyDataMap[WeekRange].Shop1Sales}</td>
+            <td>${WeeklyDataMap[WeekRange].Shop2Sales}</td>
+            <td>${WeeklyDataMap[WeekRange].Shop3Sales}</td>
+            <td class="total-cell">${CombinedSales}</td>
+          </tr>
+        `;
+
+        // Render Row inside Weekly Profit Table
+        WeeklyProfitTbody.innerHTML += `
+          <tr>
+            <td><strong>${WeekRange}</strong></td>
+            <td class="profit-cell">$${WeeklyDataMap[WeekRange].Shop1Profit}</td>
+            <td class="profit-cell">$${WeeklyDataMap[WeekRange].Shop2Profit}</td>
+            <td class="profit-cell">$${WeeklyDataMap[WeekRange].Shop3Profit}</td>
+            <td class="total-cell profit-cell">$${CombinedProfit}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function DeleteEntry(Index){
+      if(!confirm("Are you sure you want to delete this log row across all lists?")){
+        return;
+      }
+      ShopData.splice(Index,1);
+      localStorage.setItem("TripleShopSystemV4", JSON.stringify(ShopData));
+      DisplayAllTables();
+    }
+
+    function ClearInputs(){
+      document.getElementById("EntryDate").value = "";
+      document.getElementById("Shop1Added").value = "";
+      document.getElementById("Shop2Added").value = "";
+      document.getElementById("Shop3Added").value = "";
+      document.getElementById("Shop1Remaining").value = "";
+      document.getElementById("Shop2Remaining").value = "";
+      document.getElementById("Shop3Remaining").value = "";
+    }
+
+    DisplayAllTables();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,801 @@
+Here is the updated code. I have added a new table called **Weekly Summary (Mon - Sun)** that automatically aggregates your total purchased trays by their respective calendar weeks.
+
+To achieve this, the JavaScript code calculates the specific Monday (start of the week) and Sunday (end of the week) for every entry date, grouping and sorting them dynamically.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"/>
+
+  <title>Poultry Ledger Tracker</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      background:linear-gradient(135deg,#1e3c72,#2a5298);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .container{
+      width:100%;
+      max-width:1100px;
+      background:white;
+      border-radius:15px;
+      padding:30px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:25px;
+      color:#333;
+    }
+
+    h2{
+      margin-top:25px;
+      margin-bottom:15px;
+      color:#333;
+    }
+
+    .input-group{
+      display:flex;
+      gap:15px;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    input{
+      flex:1;
+      padding:12px;
+      border:2px solid #ddd;
+      border-radius:8px;
+      font-size:16px;
+    }
+
+    button{
+      padding:12px 20px;
+      border:none;
+      border-radius:8px;
+      background:#2a5298;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    button:hover{
+      background:#1e3c72;
+    }
+
+    /* Style for the Navigation Button */
+    .nav-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .nav-btn:hover {
+      background: #218838;
+    }
+
+    .delete-btn{
+      background:red;
+      padding:8px 14px;
+      font-size:14px;
+    }
+
+    .delete-btn:hover{
+      background:darkred;
+    }
+
+    .results{
+      display:flex;
+      gap:20px;
+      margin:25px 0;
+      flex-wrap:wrap;
+    }
+
+    .card{
+      flex:1;
+      background:#f4f4f4;
+      padding:20px;
+      border-radius:10px;
+      text-align:center;
+    }
+
+    .card h2{
+      margin-bottom:10px;
+      color:#444;
+    }
+
+    .card p{
+      font-size:28px;
+      font-weight:bold;
+      color:#2a5298;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow-x:auto;
+      display:block;
+      margin-bottom:20px;
+    }
+
+    table th,
+    table td{
+      border:1px solid #ddd;
+      padding:12px;
+      text-align:center;
+    }
+
+    table th{
+      background:#2a5298;
+      color:white;
+    }
+
+    table tr:nth-child(even){
+      background:#f9f9f9;
+    }
+
+    table tr:hover{
+      background:#f1f1f1;
+    }
+
+    @media(max-width:700px){
+
+      .input-group{
+        flex-direction:column;
+      }
+
+      .results{
+        flex-direction:column;
+      }
+
+      table{
+        font-size:12px;
+      }
+
+      .delete-btn{
+        padding:6px 10px;
+      }
+      
+      .nav-btn {
+        display: block;
+        width: 100%;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <a href="index2.html" class="nav-btn">Go to Shop Analysis System →</a>
+
+    <h1>Poultry Ledger Tracker</h1>
+
+    <div class="results">
+
+      <div class="card">
+
+        <h2>Starting Balance</h2>
+
+        <p>490957</p>
+
+      </div>
+
+      <div class="card">
+
+        <h2>Current Balance</h2>
+
+        <p id="CurrentBalance">490957</p>
+
+      </div>
+
+    </div>
+
+    <h2>Purchase Entry</h2>
+
+    <div class="input-group">
+
+      <input
+        type="number"
+        id="Num1"
+        placeholder="Enter Trays">
+
+      <input
+        type="number"
+        id="Num2"
+        placeholder="Enter Price per Egg">
+
+      <input
+        type="date"
+        id="Date">
+
+      <button onclick="Calculate()">
+        Add Purchase
+      </button>
+
+    </div>
+
+    <div class="results">
+
+      <div class="card">
+
+        <h2>Total Eggs</h2>
+
+        <p id="Intermediate">0</p>
+
+      </div>
+
+      <div class="card">
+
+        <h2>Final Price</h2>
+
+        <p id="Final">0</p>
+
+      </div>
+
+    </div>
+
+    <h2>Money Given To Poultry</h2>
+
+    <div class="input-group">
+
+      <input
+        type="number"
+        id="MoneyGiven"
+        placeholder="Enter Amount Given">
+
+      <input
+        type="date"
+        id="MoneyDate">
+
+      <button onclick="AddPayment()">
+        Add Payment
+      </button>
+
+    </div>
+
+    <h2>Transaction History</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Trays</th>
+
+          <th>Price</th>
+
+          <th>Total Eggs</th>
+
+          <th>Final Price</th>
+
+          <th>Date</th>
+
+          <th>Action</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="HistoryTable"></tbody>
+
+    </table>
+
+    <h2>Daily Summary</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Date</th>
+
+          <th>Total Trays</th>
+
+          <th>Total Final Price</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="SummaryTable"></tbody>
+
+    </table>
+
+    <h2>Weekly Summary (Mon - Sun)</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Week Range</th>
+
+          <th>Total Trays Bought</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="WeeklyTable"></tbody>
+
+    </table>
+
+    <h2>Balance Ledger</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Date</th>
+
+          <th>Type</th>
+
+          <th>Amount</th>
+
+          <th>Running Balance</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="LedgerTable"></tbody>
+
+    </table>
+
+  </div>
+
+  <script>
+
+    let StartingBalance = 490957;
+
+    let HistoryData =
+      JSON.parse(
+        localStorage.getItem("Calculations")
+      ) || [];
+
+    let Payments =
+      JSON.parse(
+        localStorage.getItem("Payments")
+      ) || [];
+
+    function Calculate(){
+
+      let Trays =
+        Number(
+          document.getElementById("Num1").value
+        );
+
+      let Price =
+        Number(
+          document.getElementById("Num2").value
+        );
+
+      let DateValue =
+        document.getElementById("Date").value;
+
+      if(
+        isNaN(Trays) ||
+        isNaN(Price) ||
+        DateValue === ""
+      ){
+
+        alert("Please fill all fields");
+
+        return;
+      }
+
+      let TotalEggs = Trays * 30;
+
+      let FinalPrice = TotalEggs * Price;
+
+      document.getElementById("Intermediate").innerText =
+        TotalEggs;
+
+      document.getElementById("Final").innerText =
+        FinalPrice;
+
+      let Calculation = {
+
+        Trays,
+        Price,
+        TotalEggs,
+        FinalPrice,
+        Date: DateValue,
+        TimeStamp:
+          new Date(DateValue).getTime()
+
+      };
+
+      HistoryData.push(Calculation);
+
+      localStorage.setItem(
+        "Calculations",
+        JSON.stringify(HistoryData)
+      );
+
+      DisplayHistory();
+
+      DisplaySummary();
+
+      DisplayWeeklySummary();
+
+      DisplayLedger();
+
+      document.getElementById("Num1").value = "";
+
+      document.getElementById("Num2").value = "";
+
+      document.getElementById("Date").value = "";
+    }
+
+    function AddPayment(){
+
+      let Amount =
+        Number(
+          document.getElementById("MoneyGiven").value
+        );
+
+      let DateValue =
+        document.getElementById("MoneyDate").value;
+
+      if(
+        isNaN(Amount) ||
+        Amount <= 0 ||
+        DateValue === ""
+      ){
+
+        alert("Please fill all payment fields");
+
+        return;
+      }
+
+      let Payment = {
+
+        Amount,
+        Date: DateValue,
+        TimeStamp:
+          new Date(DateValue).getTime()
+
+      };
+
+      Payments.push(Payment);
+
+      localStorage.setItem(
+        "Payments",
+        JSON.stringify(Payments)
+      );
+
+      DisplayLedger();
+
+      document.getElementById("MoneyGiven").value = "";
+
+      document.getElementById("MoneyDate").value = "";
+    }
+
+    function DisplayHistory(){
+
+      let Table =
+        document.getElementById("HistoryTable");
+
+      Table.innerHTML = "";
+
+      let SortedData =
+        [...HistoryData].sort(
+          (A,B)=> B.TimeStamp - A.TimeStamp
+        );
+
+      SortedData.forEach((Item)=>{
+
+        let OriginalIndex =
+          HistoryData.indexOf(Item);
+
+        let Row = `
+
+          <tr>
+
+            <td>${Item.Trays}</td>
+
+            <td>${Item.Price}</td>
+
+            <td>${Item.TotalEggs}</td>
+
+            <td>${Item.FinalPrice}</td>
+
+            <td>${Item.Date}</td>
+
+            <td>
+
+              <button
+                class="delete-btn"
+                onclick="DeleteTransaction(${OriginalIndex})">
+
+                Delete
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        `;
+
+        Table.innerHTML += Row;
+
+      });
+    }
+
+    function DisplaySummary(){
+
+      let SummaryTable =
+        document.getElementById("SummaryTable");
+
+      SummaryTable.innerHTML = "";
+
+      let DailyTotals = {};
+
+      HistoryData.forEach((Item)=>{
+
+        if(DailyTotals[Item.Date]){
+
+          DailyTotals[Item.Date].FinalPrice +=
+            Item.FinalPrice;
+
+          DailyTotals[Item.Date].Trays +=
+            Item.Trays;
+
+        }else{
+
+          DailyTotals[Item.Date] = {
+
+            FinalPrice: Item.FinalPrice,
+
+            Trays: Item.Trays
+
+          };
+        }
+
+      });
+
+      let SortedDates =
+        Object.keys(DailyTotals).sort(
+          (A,B)=> new Date(B) - new Date(A)
+        );
+
+      SortedDates.forEach((Date)=>{
+
+        let Row = `
+
+          <tr>
+
+            <td>${Date}</td>
+
+            <td>${DailyTotals[Date].Trays}</td>
+
+            <td>${DailyTotals[Date].FinalPrice}</td>
+
+          </tr>
+
+        `;
+
+        SummaryTable.innerHTML += Row;
+
+      });
+    }
+
+    /* NEW FUNCTION: GETS MON-SUN WEEKS AND RNDERS WEEKLY SUMMARY */
+    function DisplayWeeklySummary(){
+      let WeeklyTable = document.getElementById("WeeklyTable");
+      WeeklyTable.innerHTML = "";
+
+      let WeeklyTotals = {};
+
+      // Helper function to find Monday and Sunday date string boundaries
+      function getWeekRange(dateStr) {
+        let date = new Date(dateStr);
+        let day = date.getDay(); 
+        
+        // Adjust standard JS Sunday (0) to match a Monday-start week system
+        let diffToMonday = date.getDate() - day + (day === 0 ? -6 : 1); 
+        
+        let monday = new Date(date.setDate(diffToMonday));
+        let sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+
+        // Format dates cleanly into YYYY-MM-DD format
+        let monStr = monday.toISOString().split('T')[0];
+        let sunStr = sunday.toISOString().split('T')[0];
+
+        return {
+          label: `${monStr} to ${sunStr}`,
+          mondayTime: monday.getTime()
+        };
+      }
+
+      HistoryData.forEach((Item) => {
+        let weekInfo = getWeekRange(Item.Date);
+        
+        if (WeeklyTotals[weekInfo.label]) {
+          WeeklyTotals[weekInfo.label].Trays += Item.Trays;
+        } else {
+          WeeklyTotals[weekInfo.label] = {
+            Trays: Item.Trays,
+            timestamp: weekInfo.mondayTime // saved for clean logical sorting
+          };
+        }
+      });
+
+      // Sort weeks in descending order (newest weeks first)
+      let sortedWeeks = Object.keys(WeeklyTotals).sort(
+        (A, B) => WeeklyTotals[B].timestamp - WeeklyTotals[A].timestamp
+      );
+
+      sortedWeeks.forEach((weekLabel) => {
+        let row = `
+          <tr>
+            <td>${weekLabel}</td>
+            <td>${WeeklyTotals[weekLabel].Trays}</td>
+          </tr>
+        `;
+        WeeklyTable.innerHTML += row;
+      });
+    }
+
+   function DisplayLedger(){
+
+  let LedgerTable =
+    document.getElementById("LedgerTable");
+
+  LedgerTable.innerHTML = "";
+
+  let Ledger = [];
+
+  HistoryData.forEach((Item)=>{
+
+    Ledger.push({
+
+      Date: Item.Date,
+
+      Type: "Purchase",
+
+      Amount: Item.FinalPrice,
+
+      TimeStamp: Item.TimeStamp
+
+    });
+
+  });
+
+  Payments.forEach((Item)=>{
+
+    Ledger.push({
+
+      Date: Item.Date,
+
+      Type: "Payment",
+
+      Amount: -Item.Amount,
+
+      TimeStamp: Item.TimeStamp
+
+    });
+
+  });
+
+  Ledger.sort(
+    (A,B)=> B.TimeStamp - A.TimeStamp
+  );
+
+  let RunningBalance =
+    StartingBalance;
+
+  let AscendingLedger =
+    [...Ledger].sort(
+      (A,B)=> A.TimeStamp - B.TimeStamp
+    );
+
+  AscendingLedger.forEach((Item)=>{
+
+    RunningBalance += Item.Amount;
+
+    Item.Balance = RunningBalance;
+
+  });
+
+  let DisplayLedgerData =
+    AscendingLedger.reverse();
+
+  DisplayLedgerData.forEach((Item)=>{
+
+    let Row = `
+
+      <tr>
+
+        <td>${Item.Date}</td>
+
+        <td>${Item.Type}</td>
+
+        <td>${Item.Amount}</td>
+
+        <td>${Item.Balance}</td>
+
+      </tr>
+
+    `;
+
+    LedgerTable.innerHTML += Row;
+
+  });
+
+  document.getElementById("CurrentBalance").innerText =
+    RunningBalance;
+}
+    function DeleteTransaction(Index){
+
+      HistoryData.splice(Index,1);
+
+      localStorage.setItem(
+        "Calculations",
+        JSON.stringify(HistoryData)
+      );
+
+      DisplayHistory();
+
+      DisplaySummary();
+
+      DisplayWeeklySummary();
+
+      DisplayLedger();
+    }
+
+    DisplayHistory();
+
+    DisplaySummary();
+
+    DisplayWeeklySummary();
+
+    DisplayLedger();
+
+  </script>
+
+</body>
+
+</html>
+
