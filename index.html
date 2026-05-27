@@ -1,4 +1,4 @@
-h<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,7 +7,7 @@ h<!DOCTYPE html>
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0" />
+    content="width=device-width, initial-scale=1.0"/>
 
   <title>Poultry Ledger Tracker</title>
 
@@ -80,21 +80,22 @@ h<!DOCTYPE html>
       background:#1e3c72;
     }
 
+    /* Style for the Navigation Button */
     .nav-btn {
-      display:inline-block;
-      text-decoration:none;
-      background:#28a745;
-      color:white;
-      padding:12px 20px;
-      border-radius:8px;
-      font-weight:bold;
-      margin-bottom:20px;
-      transition:0.3s;
-      text-align:center;
+      display: inline-block;
+      text-decoration: none;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      transition: 0.3s;
+      text-align: center;
     }
 
     .nav-btn:hover {
-      background:#218838;
+      background: #218838;
     }
 
     .delete-btn{
@@ -178,10 +179,10 @@ h<!DOCTYPE html>
       .delete-btn{
         padding:6px 10px;
       }
-
-      .nav-btn{
-        display:block;
-        width:100%;
+      
+      .nav-btn {
+        display: block;
+        width: 100%;
       }
     }
 
@@ -193,9 +194,8 @@ h<!DOCTYPE html>
 
   <div class="container">
 
-    <a href="index2.html" class="nav-btn">
-      Go to Shop Analysis System →
-    </a>
+    <!-- Navigation Link to Page 2 -->
+    <a href="index2.html" class="nav-btn">Go to Shop Analysis System →</a>
 
     <h1>Poultry Ledger Tracker</h1>
 
@@ -291,10 +291,15 @@ h<!DOCTYPE html>
         <tr>
 
           <th>Trays</th>
+
           <th>Price</th>
+
           <th>Total Eggs</th>
+
           <th>Final Price</th>
+
           <th>Date</th>
+
           <th>Action</th>
 
         </tr>
@@ -314,7 +319,9 @@ h<!DOCTYPE html>
         <tr>
 
           <th>Date</th>
+
           <th>Total Trays</th>
+
           <th>Total Final Price</th>
 
         </tr>
@@ -322,25 +329,6 @@ h<!DOCTYPE html>
       </thead>
 
       <tbody id="SummaryTable"></tbody>
-
-    </table>
-
-    <h2>Weekly Summary (Mon - Sun)</h2>
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>Week Range</th>
-          <th>Total Trays Bought</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody id="WeeklyTable"></tbody>
 
     </table>
 
@@ -353,8 +341,11 @@ h<!DOCTYPE html>
         <tr>
 
           <th>Date</th>
+
           <th>Type</th>
+
           <th>Amount</th>
+
           <th>Running Balance</th>
 
         </tr>
@@ -397,11 +388,13 @@ h<!DOCTYPE html>
         document.getElementById("Date").value;
 
       if(
-        document.getElementById("Num1").value === "" ||
-        document.getElementById("Num2").value === "" ||
+        isNaN(Trays) ||
+        isNaN(Price) ||
         DateValue === ""
       ){
+
         alert("Please fill all fields");
+
         return;
       }
 
@@ -422,7 +415,8 @@ h<!DOCTYPE html>
         TotalEggs,
         FinalPrice,
         Date: DateValue,
-        TimeStamp: new Date(DateValue).getTime()
+        TimeStamp:
+          new Date(DateValue).getTime()
 
       };
 
@@ -434,12 +428,15 @@ h<!DOCTYPE html>
       );
 
       DisplayHistory();
+
       DisplaySummary();
-      DisplayWeeklySummary();
+
       DisplayLedger();
 
       document.getElementById("Num1").value = "";
+
       document.getElementById("Num2").value = "";
+
       document.getElementById("Date").value = "";
     }
 
@@ -454,11 +451,13 @@ h<!DOCTYPE html>
         document.getElementById("MoneyDate").value;
 
       if(
-        document.getElementById("MoneyGiven").value === "" ||
+        isNaN(Amount) ||
         Amount <= 0 ||
         DateValue === ""
       ){
+
         alert("Please fill all payment fields");
+
         return;
       }
 
@@ -466,7 +465,8 @@ h<!DOCTYPE html>
 
         Amount,
         Date: DateValue,
-        TimeStamp: new Date(DateValue).getTime()
+        TimeStamp:
+          new Date(DateValue).getTime()
 
       };
 
@@ -480,6 +480,7 @@ h<!DOCTYPE html>
       DisplayLedger();
 
       document.getElementById("MoneyGiven").value = "";
+
       document.getElementById("MoneyDate").value = "";
     }
 
@@ -505,9 +506,13 @@ h<!DOCTYPE html>
           <tr>
 
             <td>${Item.Trays}</td>
+
             <td>${Item.Price}</td>
+
             <td>${Item.TotalEggs}</td>
+
             <td>${Item.FinalPrice}</td>
+
             <td>${Item.Date}</td>
 
             <td>
@@ -555,6 +560,7 @@ h<!DOCTYPE html>
           DailyTotals[Item.Date] = {
 
             FinalPrice: Item.FinalPrice,
+
             Trays: Item.Trays
 
           };
@@ -574,7 +580,9 @@ h<!DOCTYPE html>
           <tr>
 
             <td>${Date}</td>
+
             <td>${DailyTotals[Date].Trays}</td>
+
             <td>${DailyTotals[Date].FinalPrice}</td>
 
           </tr>
@@ -586,173 +594,95 @@ h<!DOCTYPE html>
       });
     }
 
-    function DisplayWeeklySummary(){
+   function DisplayLedger(){
 
-      let WeeklyTable =
-        document.getElementById("WeeklyTable");
+  let LedgerTable =
+    document.getElementById("LedgerTable");
 
-      WeeklyTable.innerHTML = "";
+  LedgerTable.innerHTML = "";
 
-      let WeeklyTotals = {};
+  let Ledger = [];
 
-      function getWeekRange(dateStr){
+  HistoryData.forEach((Item)=>{
 
-        let parts = dateStr.split('-');
+    Ledger.push({
 
-        let date =
-          new Date(parts[0], parts[1] - 1, parts[2]);
+      Date: Item.Date,
 
-        let day = date.getDay();
+      Type: "Purchase",
 
-        let diffToMonday =
-          date.getDate() - day + (day === 0 ? -6 : 1);
+      Amount: Item.FinalPrice,
 
-        let monday =
-          new Date(date.setDate(diffToMonday));
+      TimeStamp: Item.TimeStamp
 
-        let sunday = new Date(monday);
+    });
 
-        sunday.setDate(monday.getDate() + 6);
+  });
 
-        let monStr =
-          monday.toISOString().split('T')[0];
+  Payments.forEach((Item)=>{
 
-        let sunStr =
-          sunday.toISOString().split('T')[0];
+    Ledger.push({
 
-        return {
+      Date: Item.Date,
 
-          label: `${monStr} to ${sunStr}`,
+      Type: "Payment",
 
-          mondayTime: monday.getTime()
+      Amount: -Item.Amount,
 
-        };
-      }
+      TimeStamp: Item.TimeStamp
 
-      HistoryData.forEach((Item)=>{
+    });
 
-        let weekInfo =
-          getWeekRange(Item.Date);
+  });
 
-        if(WeeklyTotals[weekInfo.label]){
+  Ledger.sort(
+    (A,B)=> B.TimeStamp - A.TimeStamp
+  );
 
-          WeeklyTotals[weekInfo.label].Trays +=
-            Item.Trays;
+  let RunningBalance =
+    StartingBalance;
 
-        }else{
+  let AscendingLedger =
+    [...Ledger].sort(
+      (A,B)=> A.TimeStamp - B.TimeStamp
+    );
 
-          WeeklyTotals[weekInfo.label] = {
+  AscendingLedger.forEach((Item)=>{
 
-            Trays: Item.Trays,
-            timestamp: weekInfo.mondayTime
+    RunningBalance += Item.Amount;
 
-          };
-        }
+    Item.Balance = RunningBalance;
 
-      });
+  });
 
-      let sortedWeeks =
-        Object.keys(WeeklyTotals).sort(
-          (A,B)=>
-            WeeklyTotals[B].timestamp -
-            WeeklyTotals[A].timestamp
-        );
+  let DisplayLedgerData =
+    AscendingLedger.reverse();
 
-      sortedWeeks.forEach((weekLabel)=>{
+  DisplayLedgerData.forEach((Item)=>{
 
-        let row = `
+    let Row = `
 
-          <tr>
+      <tr>
 
-            <td>${weekLabel}</td>
-            <td>${WeeklyTotals[weekLabel].Trays}</td>
+        <td>${Item.Date}</td>
 
-          </tr>
+        <td>${Item.Type}</td>
 
-        `;
+        <td>${Item.Amount}</td>
 
-        WeeklyTable.innerHTML += row;
+        <td>${Item.Balance}</td>
 
-      });
-    }
+      </tr>
 
-    function DisplayLedger(){
+    `;
 
-      let LedgerTable =
-        document.getElementById("LedgerTable");
+    LedgerTable.innerHTML += Row;
 
-      LedgerTable.innerHTML = "";
+  });
 
-      let Ledger = [];
-
-      HistoryData.forEach((Item)=>{
-
-        Ledger.push({
-
-          Date: Item.Date,
-          Type: "Purchase",
-          Amount: Item.FinalPrice,
-          TimeStamp: Item.TimeStamp
-
-        });
-
-      });
-
-      Payments.forEach((Item)=>{
-
-        Ledger.push({
-
-          Date: Item.Date,
-          Type: "Payment",
-          Amount: -Item.Amount,
-          TimeStamp: Item.TimeStamp
-
-        });
-
-      });
-
-      let RunningBalance =
-        StartingBalance;
-
-      let AscendingLedger =
-        [...Ledger].sort(
-          (A,B)=> A.TimeStamp - B.TimeStamp
-        );
-
-      AscendingLedger.forEach((Item)=>{
-
-        RunningBalance += Item.Amount;
-
-        Item.Balance = RunningBalance;
-
-      });
-
-      let DisplayLedgerData =
-        AscendingLedger.reverse();
-
-      DisplayLedgerData.forEach((Item)=>{
-
-        let Row = `
-
-          <tr>
-
-            <td>${Item.Date}</td>
-            <td>${Item.Type}</td>
-            <td>${Item.Amount}</td>
-            <td>${Item.Balance}</td>
-
-          </tr>
-
-        `;
-
-        LedgerTable.innerHTML += Row;
-
-      });
-
-      document.getElementById("CurrentBalance").innerText =
-        RunningBalance;
-    }
-
+  document.getElementById("CurrentBalance").innerText =
+    RunningBalance;
+}
     function DeleteTransaction(Index){
 
       HistoryData.splice(Index,1);
@@ -763,14 +693,16 @@ h<!DOCTYPE html>
       );
 
       DisplayHistory();
+
       DisplaySummary();
-      DisplayWeeklySummary();
+
       DisplayLedger();
     }
 
     DisplayHistory();
+
     DisplaySummary();
-    DisplayWeeklySummary();
+
     DisplayLedger();
 
   </script>
