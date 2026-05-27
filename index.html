@@ -1,9 +1,4 @@
-Here is the updated code. I have added a new table called **Weekly Summary (Mon - Sun)** that automatically aggregates your total purchased trays by their respective calendar weeks.
-
-To achieve this, the JavaScript code calculates the specific Monday (start of the week) and Sunday (end of the week) for every entry date, grouping and sorting them dynamically.
-
-```html
-<!DOCTYPE html>
+h<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -12,7 +7,7 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"/>
+    content="width=device-width, initial-scale=1.0" />
 
   <title>Poultry Ledger Tracker</title>
 
@@ -85,22 +80,21 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
       background:#1e3c72;
     }
 
-    /* Style for the Navigation Button */
     .nav-btn {
-      display: inline-block;
-      text-decoration: none;
-      background: #28a745;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      transition: 0.3s;
-      text-align: center;
+      display:inline-block;
+      text-decoration:none;
+      background:#28a745;
+      color:white;
+      padding:12px 20px;
+      border-radius:8px;
+      font-weight:bold;
+      margin-bottom:20px;
+      transition:0.3s;
+      text-align:center;
     }
 
     .nav-btn:hover {
-      background: #218838;
+      background:#218838;
     }
 
     .delete-btn{
@@ -184,10 +178,10 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
       .delete-btn{
         padding:6px 10px;
       }
-      
-      .nav-btn {
-        display: block;
-        width: 100%;
+
+      .nav-btn{
+        display:block;
+        width:100%;
       }
     }
 
@@ -199,7 +193,9 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
 
   <div class="container">
 
-    <a href="index2.html" class="nav-btn">Go to Shop Analysis System →</a>
+    <a href="index2.html" class="nav-btn">
+      Go to Shop Analysis System →
+    </a>
 
     <h1>Poultry Ledger Tracker</h1>
 
@@ -295,15 +291,10 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         <tr>
 
           <th>Trays</th>
-
           <th>Price</th>
-
           <th>Total Eggs</th>
-
           <th>Final Price</th>
-
           <th>Date</th>
-
           <th>Action</th>
 
         </tr>
@@ -323,9 +314,7 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         <tr>
 
           <th>Date</th>
-
           <th>Total Trays</th>
-
           <th>Total Final Price</th>
 
         </tr>
@@ -345,7 +334,6 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         <tr>
 
           <th>Week Range</th>
-
           <th>Total Trays Bought</th>
 
         </tr>
@@ -365,11 +353,8 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         <tr>
 
           <th>Date</th>
-
           <th>Type</th>
-
           <th>Amount</th>
-
           <th>Running Balance</th>
 
         </tr>
@@ -412,13 +397,11 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         document.getElementById("Date").value;
 
       if(
-        isNaN(Trays) ||
-        isNaN(Price) ||
+        document.getElementById("Num1").value === "" ||
+        document.getElementById("Num2").value === "" ||
         DateValue === ""
       ){
-
         alert("Please fill all fields");
-
         return;
       }
 
@@ -439,8 +422,7 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         TotalEggs,
         FinalPrice,
         Date: DateValue,
-        TimeStamp:
-          new Date(DateValue).getTime()
+        TimeStamp: new Date(DateValue).getTime()
 
       };
 
@@ -452,17 +434,12 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
       );
 
       DisplayHistory();
-
       DisplaySummary();
-
       DisplayWeeklySummary();
-
       DisplayLedger();
 
       document.getElementById("Num1").value = "";
-
       document.getElementById("Num2").value = "";
-
       document.getElementById("Date").value = "";
     }
 
@@ -477,13 +454,11 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
         document.getElementById("MoneyDate").value;
 
       if(
-        isNaN(Amount) ||
+        document.getElementById("MoneyGiven").value === "" ||
         Amount <= 0 ||
         DateValue === ""
       ){
-
         alert("Please fill all payment fields");
-
         return;
       }
 
@@ -491,8 +466,7 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
 
         Amount,
         Date: DateValue,
-        TimeStamp:
-          new Date(DateValue).getTime()
+        TimeStamp: new Date(DateValue).getTime()
 
       };
 
@@ -506,7 +480,6 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
       DisplayLedger();
 
       document.getElementById("MoneyGiven").value = "";
-
       document.getElementById("MoneyDate").value = "";
     }
 
@@ -532,13 +505,9 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
           <tr>
 
             <td>${Item.Trays}</td>
-
             <td>${Item.Price}</td>
-
             <td>${Item.TotalEggs}</td>
-
             <td>${Item.FinalPrice}</td>
-
             <td>${Item.Date}</td>
 
             <td>
@@ -586,7 +555,6 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
           DailyTotals[Item.Date] = {
 
             FinalPrice: Item.FinalPrice,
-
             Trays: Item.Trays
 
           };
@@ -606,9 +574,7 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
           <tr>
 
             <td>${Date}</td>
-
             <td>${DailyTotals[Date].Trays}</td>
-
             <td>${DailyTotals[Date].FinalPrice}</td>
 
           </tr>
@@ -620,153 +586,173 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
       });
     }
 
-    /* NEW FUNCTION: GETS MON-SUN WEEKS AND RNDERS WEEKLY SUMMARY */
     function DisplayWeeklySummary(){
-      let WeeklyTable = document.getElementById("WeeklyTable");
+
+      let WeeklyTable =
+        document.getElementById("WeeklyTable");
+
       WeeklyTable.innerHTML = "";
 
       let WeeklyTotals = {};
 
-      // Helper function to find Monday and Sunday date string boundaries
-      function getWeekRange(dateStr) {
-        let date = new Date(dateStr);
-        let day = date.getDay(); 
-        
-        // Adjust standard JS Sunday (0) to match a Monday-start week system
-        let diffToMonday = date.getDate() - day + (day === 0 ? -6 : 1); 
-        
-        let monday = new Date(date.setDate(diffToMonday));
+      function getWeekRange(dateStr){
+
+        let parts = dateStr.split('-');
+
+        let date =
+          new Date(parts[0], parts[1] - 1, parts[2]);
+
+        let day = date.getDay();
+
+        let diffToMonday =
+          date.getDate() - day + (day === 0 ? -6 : 1);
+
+        let monday =
+          new Date(date.setDate(diffToMonday));
+
         let sunday = new Date(monday);
+
         sunday.setDate(monday.getDate() + 6);
 
-        // Format dates cleanly into YYYY-MM-DD format
-        let monStr = monday.toISOString().split('T')[0];
-        let sunStr = sunday.toISOString().split('T')[0];
+        let monStr =
+          monday.toISOString().split('T')[0];
+
+        let sunStr =
+          sunday.toISOString().split('T')[0];
 
         return {
+
           label: `${monStr} to ${sunStr}`,
+
           mondayTime: monday.getTime()
+
         };
       }
 
-      HistoryData.forEach((Item) => {
-        let weekInfo = getWeekRange(Item.Date);
-        
-        if (WeeklyTotals[weekInfo.label]) {
-          WeeklyTotals[weekInfo.label].Trays += Item.Trays;
-        } else {
+      HistoryData.forEach((Item)=>{
+
+        let weekInfo =
+          getWeekRange(Item.Date);
+
+        if(WeeklyTotals[weekInfo.label]){
+
+          WeeklyTotals[weekInfo.label].Trays +=
+            Item.Trays;
+
+        }else{
+
           WeeklyTotals[weekInfo.label] = {
+
             Trays: Item.Trays,
-            timestamp: weekInfo.mondayTime // saved for clean logical sorting
+            timestamp: weekInfo.mondayTime
+
           };
         }
+
       });
 
-      // Sort weeks in descending order (newest weeks first)
-      let sortedWeeks = Object.keys(WeeklyTotals).sort(
-        (A, B) => WeeklyTotals[B].timestamp - WeeklyTotals[A].timestamp
-      );
+      let sortedWeeks =
+        Object.keys(WeeklyTotals).sort(
+          (A,B)=>
+            WeeklyTotals[B].timestamp -
+            WeeklyTotals[A].timestamp
+        );
 
-      sortedWeeks.forEach((weekLabel) => {
+      sortedWeeks.forEach((weekLabel)=>{
+
         let row = `
+
           <tr>
+
             <td>${weekLabel}</td>
             <td>${WeeklyTotals[weekLabel].Trays}</td>
+
           </tr>
+
         `;
+
         WeeklyTable.innerHTML += row;
+
       });
     }
 
-   function DisplayLedger(){
+    function DisplayLedger(){
 
-  let LedgerTable =
-    document.getElementById("LedgerTable");
+      let LedgerTable =
+        document.getElementById("LedgerTable");
 
-  LedgerTable.innerHTML = "";
+      LedgerTable.innerHTML = "";
 
-  let Ledger = [];
+      let Ledger = [];
 
-  HistoryData.forEach((Item)=>{
+      HistoryData.forEach((Item)=>{
 
-    Ledger.push({
+        Ledger.push({
 
-      Date: Item.Date,
+          Date: Item.Date,
+          Type: "Purchase",
+          Amount: Item.FinalPrice,
+          TimeStamp: Item.TimeStamp
 
-      Type: "Purchase",
+        });
 
-      Amount: Item.FinalPrice,
+      });
 
-      TimeStamp: Item.TimeStamp
+      Payments.forEach((Item)=>{
 
-    });
+        Ledger.push({
 
-  });
+          Date: Item.Date,
+          Type: "Payment",
+          Amount: -Item.Amount,
+          TimeStamp: Item.TimeStamp
 
-  Payments.forEach((Item)=>{
+        });
 
-    Ledger.push({
+      });
 
-      Date: Item.Date,
+      let RunningBalance =
+        StartingBalance;
 
-      Type: "Payment",
+      let AscendingLedger =
+        [...Ledger].sort(
+          (A,B)=> A.TimeStamp - B.TimeStamp
+        );
 
-      Amount: -Item.Amount,
+      AscendingLedger.forEach((Item)=>{
 
-      TimeStamp: Item.TimeStamp
+        RunningBalance += Item.Amount;
 
-    });
+        Item.Balance = RunningBalance;
 
-  });
+      });
 
-  Ledger.sort(
-    (A,B)=> B.TimeStamp - A.TimeStamp
-  );
+      let DisplayLedgerData =
+        AscendingLedger.reverse();
 
-  let RunningBalance =
-    StartingBalance;
+      DisplayLedgerData.forEach((Item)=>{
 
-  let AscendingLedger =
-    [...Ledger].sort(
-      (A,B)=> A.TimeStamp - B.TimeStamp
-    );
+        let Row = `
 
-  AscendingLedger.forEach((Item)=>{
+          <tr>
 
-    RunningBalance += Item.Amount;
+            <td>${Item.Date}</td>
+            <td>${Item.Type}</td>
+            <td>${Item.Amount}</td>
+            <td>${Item.Balance}</td>
 
-    Item.Balance = RunningBalance;
+          </tr>
 
-  });
+        `;
 
-  let DisplayLedgerData =
-    AscendingLedger.reverse();
+        LedgerTable.innerHTML += Row;
 
-  DisplayLedgerData.forEach((Item)=>{
+      });
 
-    let Row = `
+      document.getElementById("CurrentBalance").innerText =
+        RunningBalance;
+    }
 
-      <tr>
-
-        <td>${Item.Date}</td>
-
-        <td>${Item.Type}</td>
-
-        <td>${Item.Amount}</td>
-
-        <td>${Item.Balance}</td>
-
-      </tr>
-
-    `;
-
-    LedgerTable.innerHTML += Row;
-
-  });
-
-  document.getElementById("CurrentBalance").innerText =
-    RunningBalance;
-}
     function DeleteTransaction(Index){
 
       HistoryData.splice(Index,1);
@@ -777,20 +763,14 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
       );
 
       DisplayHistory();
-
       DisplaySummary();
-
       DisplayWeeklySummary();
-
       DisplayLedger();
     }
 
     DisplayHistory();
-
     DisplaySummary();
-
     DisplayWeeklySummary();
-
     DisplayLedger();
 
   </script>
@@ -798,4 +778,3 @@ To achieve this, the JavaScript code calculates the specific Monday (start of th
 </body>
 
 </html>
-
